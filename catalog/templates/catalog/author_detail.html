@@ -1,0 +1,39 @@
+{% extends "catalog/base.html" %}
+{% block content %}
+    
+    <h1>Author: {{ author.first_name }} {{author.last_name}}</h1>
+    <p>Born:{{ author.date_of_birth }}  Died:{{ author.date_of_death }}</p>
+    <div>
+{% if author.author_image %}
+<img alt="Author image" class="card-img-top embed-responsive-item"
+src="{{ author.author_image.url }}" style="max-width: 200px;
+height: auto;"/>
+{% endif %}
+</div>
+
+<h1>{{ author.name }}</h1>
+
+<div><h2>Books by this author</h2>
+
+    {% for book in author.book_set.all %}
+        <hr>
+            <p>
+            <a href="{{ book.get_absolute_url }}">{{ book.title }}</a>
+            </p>
+    {% empty %}
+        <p><strong>No Books Available</strong></p>
+        <br>
+        <a href="{% url 'author_delete' pk=author.pk %}" class="btn btn-danger">Delete Author</a>
+<br>
+    {%  endfor %}
+</div>
+<br>
+<br>
+{% if user.is_superuser %}
+        <a href="{% url 'author_get_books_api' pk=author.pk %}" class="btn btn-primary">Get Books From GoogleBooks</a>
+        <br><br>
+        <a href="{% url 'author_update' pk=author.pk %}" class="btn btn-secondary">Edit Author</a>
+{% endif %}
+
+
+{% endblock %}
